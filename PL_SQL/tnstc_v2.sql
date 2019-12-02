@@ -11,7 +11,6 @@ CREATE PROCEDURE tnstc_ticket_booking(
 	IN number_of_bus_seats int,
 	IN amount double(15,2)
 )
-
 BEGIN
     DECLARE bookedSeats int DEFAULT 0;
     DECLARE busSeats int DEFAULT 0;
@@ -49,5 +48,4 @@ BEGIN
         END IF;
     END;
 END||
-
 CALL tnstc_ticket_booking(1,1,1,2,1,10000)||
