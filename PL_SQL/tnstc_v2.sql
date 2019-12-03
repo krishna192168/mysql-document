@@ -11,6 +11,7 @@ CREATE PROCEDURE tnstc_ticket_booking(
 	IN number_of_bus_seats int,
 	IN amount double(15,2)
 )
+
 BEGIN
     DECLARE bookedSeats int DEFAULT 0;
     DECLARE busSeats int DEFAULT 0;
@@ -18,9 +19,10 @@ BEGIN
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
 	BEGIN
 		SELECT 'ticket booking is failed' AS message;
-		ROLLBACK;
+		ROLLBACK to bookticket;
 	END;
 	BEGIN
+    SAVEPOINT bookticket;
 		SELECT IFNULL(SUM(bookTicket.number_of_seat),0) INTO bookedSeats FROM book_ticket bookTicket WHERE bookTicket.bus_id = bus_id;
         SELECT number_of_seats INTO busSeats FROM tnstc_bus WHERE id = bus_id;
         SET availableSeats = busSeats - bookedSeats;
@@ -40,7 +42,8 @@ BEGIN
 				number_of_bus_seats,
 				amount
 			);
-			UPDATE user_vault SET user_vault.amount = user_vault.amount - amount WHERE user_vault.user_id = user_id;
+	SAVEPOINT wallet;
+			UPDATE user_wallet SET user_wallet.amount = user_wallet.amount - amount WHERE user_wallet.user_id = user_id;
 			SELECT 'ticket booking is success' AS message;
 			COMMIT;
 		ELSE
@@ -48,4 +51,8 @@ BEGIN
         END IF;
     END;
 END||
-CALL tnstc_ticket_booking(1,1,1,2,1,10000)||
+DELIMITER ;
+CALL tnstc_ticket_booking(1,1,1,2,5,500);
+
+SELECT * FROM book_ticket;
+SELECT * FROM user_wallet;

@@ -7,7 +7,8 @@ CREATE TABLE tnstc_user(
 	password varchar(50) NOT NULL,
 	created_on timestamp DEFAULT CURRENT_TIMESTAMP,
 	updated_on timestamp,
-	PRIMARY KEY(id)
+	CONSTRAINT pk_user_id PRIMARY KEY(id),
+    CONSTRAINT uk_email UNIQUE(email)
 );
 CREATE TABLE tnstc_bus_type(
 	id int AUTO_INCREMENT,
@@ -40,18 +41,18 @@ CREATE TABLE book_ticket(
 	drop_point_id int NOT NULL,
 	amount double(15,2) NOT NULL,
 	number_of_seat int NOT NULL, 
-	PRIMARY KEY(id),
-	FOREIGN KEY(user_id) REFERENCES tnstc_user(id),
-	FOREIGN KEY(pickup_point_id) REFERENCES tnstc_city(id),
-	FOREIGN KEY(drop_point_id) REFERENCES tnstc_city(id),
-	FOREIGN KEY(bus_id) REFERENCES tnstc_bus(id),
-    CHECK(number_of_seat >= 0)
+	CONSTRAINT pk_bookticket_id PRIMARY KEY(id),
+	CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES tnstc_user(id),
+	CONSTRAINT fk_pickup_point_id FOREIGN KEY(pickup_point_id) REFERENCES tnstc_city(id),
+	CONSTRAINT fk_drop_point_id FOREIGN KEY(drop_point_id) REFERENCES tnstc_city(id),
+	CONSTRAINT fk_bus_id FOREIGN KEY(bus_id) REFERENCES tnstc_bus(id),
+    CONSTRAINT ck_number_of_seat CHECK(number_of_seat >= 0)
 );
-CREATE TABLE user_vault(
+CREATE TABLE user_wallet(
 	id int AUTO_INCREMENT,
     user_id int NOT NULL,
 	amount double(15,2) NOT NULL,
-	PRIMARY KEY(id),
-    FOREIGN KEY(user_id) REFERENCES tnstc_user(id),
-	CHECK(amount > 0)
+	CONSTRAINT pk_user_wallet_id PRIMARY KEY(id),
+    CONSTRAINT fk_wallet_user_id FOREIGN KEY(user_id) REFERENCES tnstc_user(id),
+	CONSTRAINT ck_amount CHECK(amount > 0)
 );
