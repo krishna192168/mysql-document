@@ -30,7 +30,7 @@ ALTER TABLE buses ADD number_of_seats int NOT NULL;
 DESC buses;
 CREATE TABLE cities(
 	id int AUTO_INCREMENT,
-	city varchar(50),
+	city_name varchar(50),
 	CONSTRAINT pk_cities_id PRIMARY KEY(id)
 );
 CREATE TABLE book_tickets(
