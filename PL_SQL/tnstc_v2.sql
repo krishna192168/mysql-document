@@ -85,7 +85,7 @@ INSERT INTO buses(
     80
 );
 INSERT INTO cities(
-	city
+	city_name
 )VALUES(
 	'madurai'
 );
